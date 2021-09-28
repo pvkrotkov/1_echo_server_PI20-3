@@ -1,10 +1,27 @@
 import socket
-from time import sleep
+import sys
 
+ADDR = '127.0.0.1'
+PORT = 9090
 sock = socket.socket()
 sock.setblocking(1)
-sock.connect(('', 9091))
-print('Соединение с сервером...')
+
+request = input('Введите адрес и порт для подключения через пробел.  \n'\
+                'Нажмите Enter, чтобы использовать значение по умолчанию:\n')
+if request:
+    try:
+        ADDR, PORT = request.split()
+        PORT = int(PORT)
+    except:
+        print('Введены некорректные данные!')
+        sys.exit()
+
+try:
+    sock.connect((ADDR, PORT))
+    print('Соединение с сервером...')
+except:
+    print('Невозможно подключиться!')
+    sys.exit()
 
 
 msg = input()
