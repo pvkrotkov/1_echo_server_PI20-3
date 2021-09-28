@@ -24,7 +24,7 @@ except:
     sys.exit()
 
 
-msg = input()
+msg = f'IP: {ADDR}, PORT:{PORT}'
 while msg != 'exit':
     sock.send(msg.encode())
     print('Отправка данных серверу...')
@@ -32,7 +32,7 @@ while msg != 'exit':
     data = sock.recv(1024)
     print('Приём данных от сервера...')
 
-    print(data.decode())
+    print(data.decode() + '\n')
     msg = input()
 
 sock.close()
