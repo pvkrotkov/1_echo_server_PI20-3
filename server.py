@@ -1,18 +1,21 @@
 import socket
-from time import sleep
 
 sock = socket.socket()
-sock.setblocking(1)
-msg = ""
-
+msg = ''
+print('Launching the server...')
 try:
-    sock.connect(('localhost', 8080))
-    print('Connected to server')
+    sock.bind(('', 8080))
+    print('Success')
+    sock.listen()
+    conn, addr = sock.accept()
+    print('The client is connected')
+    print('Address: ' + str(addr))
     while msg != "exit":
-        msg = input('Input your message: ')
-        sock.send(msg.encode())
-        data = sock.recv(1024)
+        data = conn.recv(1024)
+        if not data:
+            break
+        msg = data.decode()
+        conn.send(data)
+        print('Message: ' + str(msg))
 except:
-    print('Connection error\nShutdown')
-
-sock.close()
+    print('Launch error')
