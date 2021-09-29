@@ -34,6 +34,7 @@ while msg != 'exit':
 
     print(data.decode() + '\n')
     msg = input()
+    msg = '<пустое сообщение>' if not msg else msg
 
 sock.close()
 print('Разрыв соединения с сервером.')
