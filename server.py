@@ -1,20 +1,18 @@
 import socket
+from time import sleep
 
 sock = socket.socket()
-sock.bind(('', 9090))
-sock.listen(0)
-conn, addr = sock.accept()
-print(addr)
+sock.setblocking(1)
+msg = ""
 
-msg = ''
+try:
+    sock.connect(('localhost', 8080))
+    print('Connected to server')
+    while msg != "exit":
+        msg = input('Input your message: ')
+        sock.send(msg.encode())
+        data = sock.recv(1024)
+except:
+    print('Connection error\nShutdown')
 
-while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
-
-print(msg)
-
-conn.close()
+sock.close()
