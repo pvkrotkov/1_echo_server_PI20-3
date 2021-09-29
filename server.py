@@ -15,8 +15,13 @@ def log(*args):
 	log_file.write('\n')
 
 def is_port_in_use(PORT):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        return s.bind(('127.0.0.1', PORT)) == 0
+	try:
+		socket.socket().bind((ADDR, PORT))
+		socket.socket().close()
+	except socket.error as e:
+		return True
+	else:
+		return False
 
 def find_user_by_ip(addr):
 	with open('users.csv') as csvfile:
@@ -49,14 +54,14 @@ if request:
 
 try:
 	while is_port_in_use(PORT):
-		print('Порт занят.')
+		print(f'Порт {PORT} занят.')
 		PORT += 1
-		print(f'Новый порт {PORT}, {type(PORT)}')
+		print(f'Новый порт {PORT}')
 	sock.bind((ADDR, PORT))
 	log(f'Начало прослушивания порта №{PORT}...')
 	sock.listen(2)
 except socket.error as e:
-	print('Порт занят.', e)
+	print(e)
 	log('Невозможно запустить сервер!')
 	sys.exit()
 
