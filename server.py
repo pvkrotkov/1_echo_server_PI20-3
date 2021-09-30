@@ -1,20 +1,16 @@
 import socket
 
 sock = socket.socket()
-sock.bind(('', 9090))
-sock.listen(0)
+sock.bind(('localhost', 9098))
+sock.listen(1)
 conn, addr = sock.accept()
-print(addr)
-
-msg = ''
+mes = ''
 
 while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
-
-print(msg)
-
-conn.close()
+    data = conn.recv(1024)
+    if not data:
+        break
+    mes = data.decode()
+    conn.send(data.upper())
+    print(mes)
+sock.close()
