@@ -82,9 +82,10 @@ if not find_user_by_ip(addr[0]):
 conn.send(f'Добро пожаловать, {find_user_by_ip(addr[0])}!\n'.encode())
 conn.send('Введите пароль для входа: '.encode())
 pswd = hashlib.md5(conn.recv(1024)).hexdigest()
-if not is_password_correct(addr[0], pswd):
+while not is_password_correct(addr[0], pswd):
 	conn.send('Неверный пароль!'.encode())
-	conn.close()
+	pswd = hashlib.md5(conn.recv(1024)).hexdigest()
+	
 log(f'Подключен пользователь {str(addr)}')
 
 msg = ''
