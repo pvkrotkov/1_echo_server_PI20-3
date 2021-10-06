@@ -1,20 +1,26 @@
 import socket
 
-sock = socket.socket()
-sock.bind(('', 9090))
-sock.listen(0)
-conn, addr = sock.accept()
-print(addr)
+clients = []
 
-msg = ''
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.bind(('', 1443))
 
-while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
+print("Server Started")
+cl = False
 
-print(msg)
+while not cl:
+    try:
+        data, addr = sock.recvfrom(1024)
 
-conn.close()
+        if addr not in clients:
+            clients.append(addr)
+            print(addr[1],'присоединился')
+
+        for client in clients:
+            if addr != client:
+                sock.sendto(data,client)
+    except:
+        print("\n[ Server Stopped ]")
+        cl = True
+
+sock.close()
