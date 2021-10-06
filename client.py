@@ -1,14 +1,26 @@
 import socket
-from time import sleep
+import threading
 
-sock = socket.socket()
-sock.setblocking(1)
-sock.connect(('10.38.165.12', 9090))
-#msg = "Hi!"
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server = ('10.4.54.7', 1443)
+
+
+def read():
+    while 1:
+        data = sock.recv(1024)
+        print(data.decode('utf-8'))
+
+
+name = input('Введите имя: ')
+
+sock.sendto(('\n'+name + ' Connect to server'+ '\n' + 'you: ').encode('utf-8'), server)
+pot = threading.Thread(target=read)
+pot.start()
+
 msg = ''
-while (msg!='exit'):
-    msg = input()
-    sock.send(msg.encode())
-    data = sock.recv(1024)
+while msg != 'exit':
+    msg = input('you:\n')
+    sock.sendto(('\n'+'['+name+']' + msg + '\n' + 'you: ').encode('utf-8'), server)
+
 sock.close()
-print(data.decode())
