@@ -1,20 +1,16 @@
 import socket
 
+
 sock = socket.socket()
-sock.bind(('', 9090))
-sock.listen(0)
-conn, addr = sock.accept()
-print(addr)
+sock.bind(('', 11490)) 
+sock.listen(1)  # прослушивание 
+conn, addr = sock.accept() # принимет подключение
+while True: 
+    data = conn.recv(1024)  #получение данных от клиента(1024байт)
+    print(data.decode())
+    conn.send('server-echo'.encode())  # sending клиенту ответ
 
-msg = ''
-
-while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
-
-print(msg)
-
+    if data.decode() == 'exit': 
+        break
 conn.close()
+sock.close() 
