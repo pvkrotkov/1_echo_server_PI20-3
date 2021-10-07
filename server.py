@@ -1,22 +1,26 @@
-import socket
+from socket import *
 
-print('запуск сервера')
-sock = socket.socket()
-sock.bind(('', 9090))
-print('начало прослушивания порта')
-sock.listen(0)
-conn, addr = sock.accept()
-print('подключение пользователя')
-print(addr)
+clients = []
 
-msg = ''
+sock = socket(AF_INET, SOCK_DGRAM)
+sock.bind(('', 1337))
 
-while msg!='exit':
-    data = conn.recv(1024)
-    msg = data.decode()
-    print('получение данных пользователя:')
-    print(msg)
-    conn.send(data)
+print("Сервер включен")
+cl = False
 
-conn.close()
-print('остановка сервера')
+while not cl:
+    try:
+        data, addr = sock.recvfrom(1024)
+
+        if addr not in clients:
+            clients.append(addr)
+            print(addr[1],'присоединился')
+
+        for client in clients:
+            if addr != client:
+                sock.sendto(data,client)
+    except:
+        print("Сервер приостановлен")
+        cl = True
+
+sock.close()
