@@ -1,17 +1,26 @@
-import socket
+from socket import *
+import threading
 
-sock = socket.socket()
-sock.setblocking(1)
-sock.connect(('localhost', 9090))
-print('соединение с сервером')
-msg=''
-while (msg!='exit'):
-    print('ввод данных пользователя:')
-    msg = input()
-    print('отправка данных серверу')
-    sock.send(msg.encode())
-    data = sock.recv(1024)
+
+sock = socket(AF_INET, SOCK_DGRAM)
+server = ('localhost', 1337)
+
+
+def read():
+    while 1:
+        data = sock.recv(1024)
+        print(data.decode('utf-8'))
+
+
+name = input('Введите имя: ')
+
+sock.sendto(('\n'+name + ' присоединился к серверу'+ '\n' + 'Вы: ').encode('utf-8'), server)
+pot = threading.Thread(target=read)
+pot.start()
+
+msg = ''
+while msg != 'exit':
+    msg = input('Вы: ')
+    sock.sendto(('\n' + name + ': ' + msg + '\n' + 'Вы: ').encode('utf-8'), server)
 
 sock.close()
-print('отключение от сервера')
-print(data.decode())
