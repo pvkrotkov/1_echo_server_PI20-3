@@ -1,18 +1,26 @@
 import socket
 from time import sleep
+import threading
+import sys
 
-sock = socket.socket()
-sock.setblocking(1)
-msg = ""
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server = ('127.0.0.1', 9090)
+nickname = input('Input your nickname: ')
 
-try:
-    sock.connect(('localhost', 8080))
-    print('Connected to server')
-    while msg != "exit":
-        msg = input('Input your message: ')
-        sock.send(msg.encode())
+
+def getData():
+    while True:
         data = sock.recv(1024)
-except:
-    print('Connection error\nShutdown')
+        print(data.decode('utf-8'))
 
-sock.close()
+
+while True:
+    msg = input()
+    if msg == "EXIT":
+        print('You were disconnected')
+        sock.close()
+    else:
+        sock.sendto((nickname + ': ' + msg).encode('utf-8'), server)
+        thread = threading.Thread(target=getData)
+        thread.start()
+
