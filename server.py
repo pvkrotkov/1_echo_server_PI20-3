@@ -1,21 +1,20 @@
 import socket
 
-sock = socket.socket()
-msg = ''
 print('Launching the server...')
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+users = []
 try:
-    sock.bind(('', 8080))
-    print('Success')
-    sock.listen()
-    conn, addr = sock.accept()
-    print('The client is connected')
-    print('Address: ' + str(addr))
-    while msg != "exit":
-        data = conn.recv(1024)
-        if not data:
-            break
-        msg = data.decode()
-        conn.send(data)
-        print('Message: ' + str(msg))
+    s.bind(('', 9090))
+    print('Success!\nWaiting...')
+    while True:
+        data, addr = s.recvfrom(1024)
+        if addr not in users:
+            print('New user has connected. Address:', addr)
+            users.append(addr)
+        print(data)
+        for i in users:
+            if i != addr:
+                s.sendto(data, i)
+
 except:
-    print('Launch error')
+    print('Launching error')
