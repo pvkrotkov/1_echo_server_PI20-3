@@ -3,14 +3,17 @@ from time import sleep
 
 sock = socket.socket()
 sock.setblocking(1)
-sock.connect(('10.38.165.12', 9090))
-
-#msg = input()
-msg = "Hi!"
-sock.send(msg.encode())
-
-data = sock.recv(1024)
-
-sock.close()
-
-print(data.decode())
+sock.connect(('localhost', 9090))
+print("Connected to the server!")
+while True:
+	msg = input()
+	if msg=='exit':
+		sock.send(msg.encode())
+		sock.close()
+		print("Connection is closed!")
+		break
+	else:
+		print("Sending message to the server...")
+		sock.send(msg.encode())
+		data = sock.recv(1024)
+		print("Recieved from the server:", data.decode())
