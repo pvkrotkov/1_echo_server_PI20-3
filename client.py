@@ -6,7 +6,7 @@ sock.setblocking(1)
 sock.connect(('localhost', 9090))
 print("Connected to the server!")
 while True:
-	msg = input()
+	msg = input('Input message: ')
 	if msg=='exit':
 		sock.send(msg.encode())
 		sock.close()
