@@ -1,20 +1,18 @@
 import socket
 
+print('Running server')
 sock = socket.socket()
-sock.bind(('', 9090))
+sock.bind(('', 4957))
 sock.listen(0)
-conn, addr = sock.accept()
-print(addr)
-
-msg = ''
-
-while True:
-	data = conn.recv(1024)
-	if not data:
-		break
-	msg += data.decode()
-	conn.send(data)
-
-print(msg)
-
-conn.close()
+connection, address = sock.accept()
+print('Connecting user')
+print(f'User {address} connected')
+message = ''
+while message != 'exit':
+    data = connection.recv(1024)
+    message = data.decode()
+    print(f'Got {address} client\'s data')
+    print(message)
+    connection.send(data)
+connection.close()
+print('Stopping server')
