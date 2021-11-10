@@ -1,19 +1,29 @@
 import socket
-from time import sleep
+import threading
+import os
 
-sock = socket.socket()
-sock.setblocking(1)
-sock.connect(('localhost', 9090))
-print("Connected to the server!")
-while True:
-	msg = input('Input message: ')
-	if msg=='exit':
-		sock.send(msg.encode())
-		sock.close()
-		print("Connection is closed!")
-		break
-	else:
-		print("Sending message to the server...")
-		sock.send(msg.encode())
-		data = sock.recv(1024)
-		print("Recieved from the server:", data.decode())
+UDP_MAX_SIZE = 65535
+
+def listen(s: socket.socket):
+	while True:
+		msg = s.recv(UDP_MAX_SIZE)
+		print('\r\r' + msg.decode('ascii') + '\n' + f'you: ', end='')
+
+def connect(host = '127.0.0.1', port = 3000):
+	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+	s.connect((host, port))
+
+	threading.Thread(target=listen, args=(s,), daemon=True).start()
+
+	s.send('__join'.encode('ascii'))
+
+	while True:
+		msg = input(f'you: ')
+		s.send(msg.encode('ascii'))
+
+
+if __name__ == '__main__':
+	os.system('clear')
+	print('Welcome to chat!')
+	connect()
