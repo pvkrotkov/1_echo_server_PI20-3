@@ -1,16 +1,24 @@
 import socket
 
+print('Идет запуск сервера')
 sock = socket.socket()
+sock.bind(('', 9097))
+print('Начало прослушивания порта')
+sock.listen(0)
+conn, addr = sock.accept()
+print('Идет подключение пользователя')
+print(addr)
 
-sock.bind(('',1777))
+msg = ''
 
-sock.listen(1)
 
-conn, addr = sock.accept()    
+while msg!='exit':
+    data = conn.recv(1024)
+    msg = data.decode()
+    print('Идет получение данных клиента:')
+    print(msg)
+    conn.send(data)
 
-while True:   
-    data = conn.recv(1024)    
-    if not data:
-        break       
-    conn.send(data.upper())
-sock.close()
+
+conn.close()
+print('Идет остановка сервера')
