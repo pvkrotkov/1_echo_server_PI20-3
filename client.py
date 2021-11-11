@@ -1,19 +1,17 @@
 import socket
 
 sock = socket.socket()
-sock.connect(('localhost', 9094))
-
-while True:
-
-    a = input()
-    if a == 'exit':
-        break
-    b = bytes(a, encoding='utf-8')
-
-    sock.send(b)
-
+sock.setblocking(1)
+sock.connect(('localhost', 9097))
+print('Идет соединение с сервером')
+msg=''
+while (msg!='exit'):
+    print('Введите данные:')
+    msg = input()
+    print('Отправляю данные на сервер')
+    sock.send(msg.encode())
     data = sock.recv(1024)
 
-    print (data)
-
 sock.close()
+print('Идет отключение от сервера')
+print(data.decode())
