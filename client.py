@@ -3,7 +3,7 @@ import socket
 sock = socket.socket()
 sock.setblocking(1)
 sock.connect(('localhost', 9097))
-print('Идет соединение с сервером')
+print('соединение с сервером')
 msg=''
 while (msg!='exit'):
     print('Введите данные:')
@@ -13,5 +13,5 @@ while (msg!='exit'):
     data = sock.recv(1024)
 
 sock.close()
-print('Идет отключение от сервера')
+print('отключение от сервера')
 print(data.decode())
