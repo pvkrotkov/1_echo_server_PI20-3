@@ -2,7 +2,7 @@ import socket
 
 sock = socket.socket()
 sock.setblocking(1)
-sock.connect(('localhost', 9097))
+sock.connect(('localhost', 9090))
 print('соединение с сервером')
 msg=''
 while (msg!='exit'):
